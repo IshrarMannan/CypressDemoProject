@@ -1,22 +1,25 @@
-export class signupPage{
-
-    navigate(url){
-
-        cy.visit(url)
-
+export class SignupPage {
+    // Locators
+    signupBtn = '#signin2';
+    usernameInput = '#sign-username';
+    passwordInput = '#sign-password';
+    signupSubmitBtn = '//button[normalize-space()="Sign up"]';
+  
+    // Navigate to URL
+    navigate(url) {
+      cy.visit(url);
     }
-    clickSignup(btn){
-        cy.get(btn).click()
-        cy.wait(1000)
+  
+    // Click Signup button to open modal
+    clickSignup() {
+      cy.get(this.signupBtn).click();
     }
-    signupModal(user, pass, btn){
-        const username= Cypress.env('username')
-
-        cy.get(user).type(username)
-        cy.wait(2000)
-        cy.get(pass).type(Cypress.env('password'))
-        cy.wait(2000)
-        cy.xpath(btn).click()     
+  
+    // Fill Signup modal
+    signupModal(username, password) {
+      cy.get(this.usernameInput).clear().type(username, { delay: 50 }).wait(500);
+      cy.get(this.passwordInput).type(password, { delay: 50 });
+      cy.xpath(this.signupSubmitBtn).click();
     }
-
-}
+  }
+  

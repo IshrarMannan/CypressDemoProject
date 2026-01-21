@@ -25,12 +25,6 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 // cypress/support/index.js or support.js
 // cypress/support/index.js or support.js
-import { faker } from '@faker-js/faker';
 
-// Add custom command to generate a dynamic username
-Cypress.Commands.add('generateRandomUsername', () => {
-  const randomUsername = faker.internet.userName(); // Generates a random username
-  Cypress.env('username', randomUsername); // Save the username to environment variable
-});
 import 'cypress-xpath'
 

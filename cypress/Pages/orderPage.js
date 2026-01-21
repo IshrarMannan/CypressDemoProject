@@ -1,51 +1,54 @@
-export class orderPage{
+export class OrderPage {
 
-    navigate(url){
+    // Locators
+    cartButton = 'a:contains("Cart")';
+    placeOrderBtn = '//button[normalize-space()="Place Order"]';
+    nameInput = '#name';
+    countryInput = '#country';
+    cityInput = '#city';
+    cardInput = '#card';
+    monthInput = '#month';
+    yearInput = '#year';
+    purchaseBtn = 'button:contains("Purchase")';
+    successMsg = '.lead';
+    okBtn = '.confirm';
 
-        cy.visit(url)
-
+    // Navigate to URL
+    navigate(url) {
+        cy.visit(url);
     }
-    clickCart(cart){
 
-        cy.contains(cart).should('be.visible').click();
-        cy.wait(2000)
+    // Click Cart
+    clickCart() {
+        cy.get(this.cartButton).should('be.visible').click();
+        cy.wait(1000);
     }
 
-    placeOrder(placeOrd, name, country, city, card, month, year, purchase){ 
+    // Place order using provided data
+    placeOrder(orderData) {
+        cy.xpath(this.placeOrderBtn).click();
+        cy.wait(500);
 
-        const username= Cypress.env('username')
+        cy.get(this.nameInput).clear().type(orderData.name, { delay: 50 });
+        cy.get(this.countryInput).clear().type(orderData.country, { delay: 50 });
+        cy.get(this.cityInput).clear().type(orderData.city, { delay: 50 });
+        cy.get(this.cardInput).clear().type(orderData.card, { delay: 50 });
+        cy.get(this.monthInput).clear().type(orderData.month, { delay: 50 });
+        cy.get(this.yearInput).clear().type(orderData.year, { delay: 50 });
 
-        //clicking on Place Order button
-        cy.xpath(placeOrd).click()
-        cy.wait(1000)
-
-        //Inputting values
-        cy.get(name).type('username')
-        cy.get(country).type('Bangladesh')
-        cy.get(city).type('Dhaka')
-        cy.get(card).type('98024783912309697')
-        cy.get(month).type('April')
-        cy.get(year).type('2025')
-        cy.contains(purchase).click()
-        cy.wait(1000)
+        cy.get(this.purchaseBtn).click();
+        cy.wait(1000);
     }
-    purchaseSuccess(msg, confirm){ 
 
-        //Get confirmation msg
-        cy.get(msg).should('be.visible')
-        .then(($el) => {
-            // This will print the actual text content of the element in the Cypress command log
-            cy.log('User name displayed: ' + $el.text());
-            
-            // This will print the actual text content to the browser console
-            console.log('User name displayed: ' + $el.text());
+    // Verify purchase success and click OK
+    verifyPurchase() {
+        cy.get(this.successMsg)
+          .should('be.visible')
+          .then(($el) => {
+              cy.log('Purchase message: ' + $el.text());
+              console.log('Purchase message: ' + $el.text());
           });
-        cy.wait(1000)
-        cy.screenshot('SuccessImage')
-
-        //clicking on ok
-        cy.get(confirm).click()
-        cy.wait(1000)
+        cy.get(this.okBtn).click();
+        cy.wait(500);
     }
-
 }

@@ -7,9 +7,7 @@ module.exports = defineConfig({
     },
     watchForFileChanges: false,
     env: {
-      baseUrl: "https://www.demoblaze.com/",
-      username: "",
-      password: "Admin123*" 
+      baseUrl: "https://www.demoblaze.com/"
     },
     //experimentalSessionAndOrigin: true,
     testIsolation: false,

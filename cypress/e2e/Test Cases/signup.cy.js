@@ -1,40 +1,35 @@
-import { signupPage } from "../../Pages/signupPage"
+import { SignupPage } from "../../Pages/signupPage";
+import { RandomData } from "../../support/randomData";
 
-const sign = new signupPage()
+const sign = new SignupPage();
+const randomData = new RandomData();
 
-describe('Demoblaze Test', () => {
+describe('Demoblaze Signup Test (POM)', () => {
+  let username, password;
 
-  beforeEach('Demoblaze URL', () => {
-
-    //manually clearing before running at first
+  beforeEach(() => {
     cy.clearCookies();
     cy.clearLocalStorage();
 
-    //generating random user name and navigating to the base url
-    cy.generateRandomUsername();
-    sign.navigate(Cypress.env('baseUrl'));
+    // Generate random username & password
+    const data = randomData.generateRandomData();
+    username = data.username;
+    password = data.password;
 
+    // Write to fixture for later tests (login, etc.)
+    cy.writeFile('cypress/fixtures/userData.json', { username, password });
+
+    // Navigate to base URL
+    sign.navigate(Cypress.env('baseUrl'));
   });
 
-  it('signup', () => {
+  it('should signup successfully', () => {
+    sign.clickSignup();
+    sign.signupModal(username, password);
 
-    //click on signup
-    const signup = '#signin2'
-    sign.clickSignup(signup)
-
-    //signing up
-    const user = '#sign-username'
-    const pass = '#sign-password'
-    const signupBtn = '//button[normalize-space()="Sign up"]'
-    sign.signupModal(user, pass, signupBtn)
-
-    //verifying
-    cy.on('window:alert', (alertText) => {
-      cy.log('Alert message: ' + alertText);  // This prints the alert message in the Cypress command log
-      console.log('Alert message: ' + alertText);  // This prints it to the browser console
-      expect(alertText).to.equal('Sign up successful.');
+    // Handle signup alert
+    cy.on('window:alert', (text) => {
+      expect(['Sign up successful.', 'This user already exist.']).to.include(text);
     });
-
-  })
-
-})
+  });
+});

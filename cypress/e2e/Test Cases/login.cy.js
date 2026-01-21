@@ -1,48 +1,27 @@
-import { loginPage } from "../../Pages/loginPage"
-import { signupPage } from "../../Pages/signupPage"
+import { LoginPage } from "../../Pages/loginPage";
 
-const login = new loginPage()
-const sign = new signupPage()
+const login = new LoginPage();
 
-describe('Demoblaze Test', () => {
-  before('Random user', () => {
+describe('Demoblaze Login Test (POM)', () => {
+  let username, password;
 
-    //manually clearing before running at first
+  before(() => {
     cy.clearCookies();
     cy.clearLocalStorage();
 
-    cy.generateRandomUsername();
-    sign.navigate(Cypress.env('baseUrl'));
-
-  });
-  it('signup', () => {
-
-    const signup = '#signin2'
-    sign.clickSignup(signup)
-
-    const user = '#sign-username'
-    const pass = '#sign-password'
-    const signupBtn = '//button[normalize-space()="Sign up"]'
-    sign.signupModal(user, pass, signupBtn)
-    cy.wait(2000)
-    cy.on('window:alert', (alertText) => {
-      expect(alertText).to.equal('Sign up successful.');
+    // Read previously stored user data from signup fixture
+    cy.readFile('cypress/fixtures/userData.json').then((user) => {
+      username = user.username;
+      password = user.password;
     });
 
-  })
-  it('login', () => {
+    login.navigate(Cypress.env('baseUrl'));
+  });
 
-    const log_in = '#login2'
-    login.clickLogin(log_in)
-
-    const user = '#loginusername'
-    const pass = '#loginpassword'
-    const loginBtn = '//button[normalize-space()="Log in"]'
-    login.loginModal(user, pass, loginBtn)
-
-    const name = '#nameofuser'
-    login.verifyLogin(name)
-
-  })
-
-})
+  it('should login successfully', () => {
+    login.openLoginModal();
+    login.login(username, password);
+    login.clickLoginBtn();
+    login.verifyLogin(username);
+  });
+});

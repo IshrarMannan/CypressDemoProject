@@ -1,38 +1,40 @@
-export class loginPage{
-
-    navigate(url){
-
-        cy.visit(url)
-
+export class LoginPage {
+    // Locators
+    loginModal = '#login2'
+    usernameInput = '#loginusername';
+    passwordInput = '#loginpassword';
+    loginBtn = 'button:contains("Log in")';
+    nameLabel = '#nameofuser';
+  
+    // Navigate to login page
+    navigate(url) {
+      cy.visit(url);
     }
-    clickLogin(btn){
-
-        cy.get(btn).click()
-        cy.wait(1000)
+    // Open  login form
+    openLoginModal() {
+        cy.get(this.loginModal).click();
+      }
+    
+    // Fill login form
+    login(username, password) {
+        cy.get(this.usernameInput).clear().type(username, { delay: 50 }).wait(500);
+        cy.get(this.passwordInput).type(password, { delay: 50 });
     }
-
-    loginModal(user, pass, btn){
-        const username= Cypress.env('username')
-
-        cy.get(user).type(username)
-        cy.wait(2000)
-        cy.get(pass).type(Cypress.env('password'))
-        cy.wait(2000)
-        cy.xpath(btn).click()
-        cy.wait(2000)
+  
+    // Click login button
+    clickLoginBtn() {
+      cy.get(this.loginBtn).click();
     }
-    verifyLogin(name){
-        cy.get(name)  
-        .should('be.visible')  // Check if the username element is visible
-        .and('contain.text', Cypress.env('username'))
+  
+    // Verify login success
+    verifyLogin(username) {
+      cy.get(this.nameLabel)
+        .should('be.visible')
+        .and('contain.text', username)
         .then(($el) => {
-            // This will print the actual text content of the element in the Cypress command log
-            cy.log('User name displayed: ' + $el.text());
-            
-            // This will print the actual text content to the browser console
-            console.log('User name displayed: ' + $el.text());
-          });
-
+          cy.log('User name displayed: ' + $el.text());
+          console.log('User name displayed: ' + $el.text());
+        });
     }
-
-}
+  }
+  
