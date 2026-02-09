@@ -1,5 +1,7 @@
 import { LoginPage } from "../../Pages/loginPage";
+import { LogoutPage } from "../../Pages/logoutPage";
 
+const logout = new LogoutPage(); 
 const login = new LoginPage();
 
 describe('Demoblaze Login Test (POM)', () => {
@@ -23,5 +25,8 @@ describe('Demoblaze Login Test (POM)', () => {
     login.login(username, password);
     login.clickLoginBtn();
     login.verifyLogin(username);
+  });
+  after(() => {
+    logout.clickLogout(); // click logout and verify
   });
 });

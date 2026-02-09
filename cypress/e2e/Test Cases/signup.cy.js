@@ -1,8 +1,10 @@
 import { SignupPage } from "../../Pages/signupPage";
 import { RandomData } from "../../support/randomData";
+import { LogoutPage } from "../../Pages/logoutPage";
 
 const sign = new SignupPage();
 const randomData = new RandomData();
+const logout = new LogoutPage(); 
 
 describe('Demoblaze Signup Test (POM)', () => {
   let username, password;
@@ -32,4 +34,8 @@ describe('Demoblaze Signup Test (POM)', () => {
       expect(['Sign up successful.', 'This user already exist.']).to.include(text);
     });
   });
+      // ---------- LOGOUT ----------
+    after(() => {
+      logout.clickLogout(); // click logout and verify
+    });
 });

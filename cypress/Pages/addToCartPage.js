@@ -1,34 +1,34 @@
-export class addToCartPage{
+export class AddToCartPage {
 
-    navigate(url){
+    // Locators
+    laptopCategory = 'Laptops';
+    productSonyVaio = '//a[normalize-space()="Sony vaio i5"]';
+    addToCartButton = '//a[normalize-space()="Add to cart"]';
 
-        cy.visit(url)
-
+    // Navigate to any URL
+    navigate(url) {
+        cy.visit(url);
     }
-    clickLaptop(Lbtn){
 
-        cy.contains(Lbtn).should('be.visible').click();
-        cy.wait(1000)
+    // Click on Laptop category
+    clickLaptop() {
+        cy.contains(this.laptopCategory)
+          .should('be.visible')
+          .click();
     }
 
-    addToCart(prod, add){ 
-
-        cy.xpath(prod).click()
-        cy.wait(2000)
-        cy.xpath(add).click()
+    // Select product and add to cart
+    addToCart() {
+        cy.xpath(this.productSonyVaio).click();
+        cy.xpath(this.addToCartButton)
+          .should('be.visible')
+          .click();
     }
-   /* verifyLogin(name){
-        cy.get(name)  
-        .should('be.visible')  // Check if the username element is visible
-        .and('contain.text', Cypress.env('username'))
-        .then(($el) => {
-            // This will print the actual text content of the element in the Cypress command log
-            cy.log('User name displayed: ' + $el.text());
-            
-            // This will print the actual text content to the browser console
-            console.log('User name displayed: ' + $el.text());
-          });
 
-    }*/
-
+    // Optional: verify product added alert
+    verifyProductAdded() {
+        cy.on('window:alert', (alertText) => {
+            expect(alertText).to.equal('Product added.');
+        });
+    }
 }
