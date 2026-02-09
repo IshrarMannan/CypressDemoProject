@@ -26,8 +26,7 @@ jobs:
         uses: cypress-io/github-action@v5
         with:
           browser: chrome
-          headless: true
-          spec: "cypress/e2e/smokeTest.cy.js"
+          spec: "cypress/e2e/Test Cases/smokeTest.cy.js"
 
       - name: Upload screenshots/videos
         if: failure()
