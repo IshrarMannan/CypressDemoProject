@@ -17,3 +17,14 @@
 import './commands'
 
 require('cypress-xpath'); // Adds XPath support
+afterEach(() => {
+    const test = Cypress.currentTest
+  
+    if (test) {
+      const testTitle = test.title
+        .replace(/[^a-zA-Z0-9 ]/g, "")
+        .replace(/\s+/g, "_")
+  
+      cy.screenshot(`IT-${testTitle}`)
+    }
+  })
