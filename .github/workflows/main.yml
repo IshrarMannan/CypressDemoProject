@@ -1,5 +1,6 @@
 name: Cypress Smoke Tests
 
+# Trigger the workflow on pushes to main or manually
 on:
   push:
     branches:
@@ -7,32 +8,78 @@ on:
   workflow_dispatch:
 
 jobs:
-  cypress-smoke:
-    runs-on: ubuntu-latest
+  # JOB 1: Install Dependencies
+  # Purpose: checkout code, setup Node.js, install npm dependencies
+  install:
+    name: Install Dependencies
+    runs-on: ubuntu-latest   # Use latest Ubuntu runner
 
     steps:
+      # Step 1: Checkout code from GitHub
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # Step 2: Setup Node.js environment
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
+      # Step 3: Install npm dependencies
       - name: Install dependencies
         run: npm install
 
-      - name: Run Cypress Smoke Test
+      # Step 4: Cache node_modules to speed up future runs
+      # Key is based on package-lock.json hash
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+
+  # JOB 2: Run Cypress Smoke Test
+  # Purpose: run Cypress test with Dashboard recording
+  # Depends on "install" job
+  cypress-test:
+    name: Run Cypress Smoke Test
+    runs-on: ubuntu-latest
+    needs: install   # This job will start only after install completes
+
+    steps:
+      # Step 1: Checkout the code again (needed for each job)
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Restore cached node_modules if available
+      - name: Restore node_modules cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+
+      # Step 3: Run Cypress test with Dashboard recording
+      - name: Run Cypress Smoke Test with Dashboard Recording
         uses: cypress-io/github-action@v5
         with:
           browser: chrome
-          spec: "cypress/e2e/Test Cases/smokeTest.cy.js"
+          spec: "cypress/e2e/Test Cases/smokeTest.cy.js"  
+          record: true                                        # Enables Cypress Dashboard recording
+          key: ${{ secrets.CYPRESS_RECORD_KEY }}             # Cypress Dashboard project key (stored in GitHub secrets)
 
+  # JOB 3: Upload Artifacts
+  # Purpose: Save screenshots and videos even if tests fail
+  # Depends on "cypress-test" job
+  upload-artifacts:
+    name: Upload Cypress Artifacts
+    runs-on: ubuntu-latest
+    needs: cypress-test   # Starts after cypress-test finishes
+    if: always()          # Run this step even if tests fail
+
+    steps:
       - name: Upload screenshots/videos
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: cypress-artifacts
           path: |
-            cypress/screenshots/**
-            cypress/videos/**
+            cypress/screenshots/**   # Upload all screenshots
+            cypress/videos/**        # Upload all videos
