@@ -1,6 +1,7 @@
 const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
+  projectId: '9ohasi',
   video: true, // ✅ enable video recording
   screenshotOnRunFailure: true, // default true but good to keep
   e2e: {
