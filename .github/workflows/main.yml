@@ -57,14 +57,12 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
 
-      # Step 3: Run Cypress test with Dashboard recording
-      - name: Run Cypress Smoke Test with Dashboard Recording
+      # Step 3: Run Cypress test
+      - name: Run Cypress Smoke Test
         uses: cypress-io/github-action@v5
         with:
           browser: chrome
           spec: "cypress/e2e/Test Cases/smokeTest.cy.js"  
-          record: true                                        # Enables Cypress Dashboard recording
-          key: ${{ secrets.CYPRESS_RECORD_KEY }}             # Cypress Dashboard project key (stored in GitHub secrets)
 
   # JOB 3: Upload Artifacts
   # Purpose: Save screenshots and videos even if tests fail
