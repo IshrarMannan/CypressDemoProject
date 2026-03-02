@@ -79,6 +79,6 @@ jobs:
         with:
           name: cypress-artifacts
           path: |
-            cypress/screenshots/**   # Upload all screenshots
-            cypress/videos/**        # Upload all videos
-            cypress/reports/**        # Upload report
+            cypress/screenshots/**   
+            cypress/videos/**        
+            cypress/reports/**        
