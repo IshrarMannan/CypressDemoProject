@@ -3,9 +3,17 @@ const { defineConfig } = require("cypress");
 module.exports = defineConfig({
   video: true, // ✅ enable video recording
   screenshotOnRunFailure: true, // default true but good to keep
+  reporter: "cypress-mochawesome-reporter",
+  reporterOptions: {
+    reportDir: "cypress/reports",
+    charts: true,
+    reportPageTitle: "Test Report"
+  },
   e2e: {
     setupNodeEvents(on, config) {
-      // implement node event listeners here
+
+      require("cypress-mochawesome-reporter/plugin")(on);
+      
       // detect CI automatically
       if (process.env.CI) {
         config.env.CI = true
