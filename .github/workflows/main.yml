@@ -74,10 +74,11 @@ jobs:
     if: always()          # Run this step even if tests fail
 
     steps:
-      - name: Upload screenshots/videos
+      - name: Upload screenshots/videos/reports
         uses: actions/upload-artifact@v4
         with:
           name: cypress-artifacts
           path: |
             cypress/screenshots/**   # Upload all screenshots
             cypress/videos/**        # Upload all videos
+            cypress/reports/**        # Upload report
