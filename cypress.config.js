@@ -1,6 +1,7 @@
 const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
+  projectId: "zz5dhd",
   video: true, // ✅ enable video recording
   screenshotOnRunFailure: true, // default true but good to keep
   reporter: "cypress-mochawesome-reporter",
