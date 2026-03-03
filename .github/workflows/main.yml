@@ -57,12 +57,16 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
 
-      # Step 3: Run Cypress test
+      # Step 3: Run Cypress test with reocrd enabled
       - name: Run Cypress Smoke Test
         uses: cypress-io/github-action@v5
         with:
           browser: chrome
-          spec: "cypress/e2e/Test Cases/smokeTest.cy.js"  
+          spec: "cypress/e2e/Test Cases/smokeTest.cy.js" 
+          record: true
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          
 
       # Step 4: Upload screenshots/videos/reports
       - name: Upload Cypress Artifacts
